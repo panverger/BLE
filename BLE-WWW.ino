@@ -12,7 +12,7 @@
 
 class MyCallbacks: public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *pCharacteristic) {
-      std::string value = pCharacteristic->getValue();
+      String value = pCharacteristic->getValue();
 
       if (value.length() > 0) {
         Serial.println("*********");
@@ -23,11 +23,11 @@ class MyCallbacks: public BLECharacteristicCallbacks {
         Serial.println();
         Serial.println("*********");
 
-        if (strcmp(value.c_str(), "1") == 0) {
+        if (value == "1") {
           digitalWrite(LED_PIN, HIGH);
           Serial.println("LED is ON");
         }
-        else if (strcmp(value.c_str(), "0") == 0) {
+        else if (value == "0") {
           digitalWrite(LED_PIN, LOW);
           Serial.println("LED is OFF");
         }
@@ -38,6 +38,7 @@ class MyCallbacks: public BLECharacteristicCallbacks {
 void setup() {
   Serial.begin(115200);
   pinMode(LED_PIN, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
 
   BLEDevice::init("ESP32-C6 LED Control");
   BLEServer *pServer = BLEDevice::createServer();
@@ -62,5 +63,9 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  delay(2000);
+  delay(200);
+  digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
+  delay(1000);                      // wait for a second
+  digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
+  delay(1000);  
 }
